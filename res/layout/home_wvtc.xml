@@ -1,0 +1,25 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="fill_parent" android:layout_height="fill_parent" android:orientation="vertical">
+
+
+
+
+
+
+
+
+    <ProgressBar
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="200px"
+            android:layout_height="200px"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:id="@+id/progressBar"/>
+
+    <WebView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="10"
+            android:id="@+id/webView1"/>
+
+</LinearLayout>
