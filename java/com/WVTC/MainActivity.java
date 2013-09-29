@@ -4,6 +4,9 @@ import java.util.Locale;
 
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -151,6 +154,19 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
      * A dummy fragment representing a section of the app, but that simply
      * displays dummy text.
      */
+    public static boolean hasWIFIConnection(Context context)
+    {
+
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo wifiNetwork = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        if (wifiNetwork != null && wifiNetwork.isConnected())
+        {
+            return true;
+        }
+        return false;
+
+    }
     public static class DummySectionFragment extends Fragment {
         /**
          * The fragment argument representing the section number for this
@@ -160,9 +176,11 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         public DummySectionFragment() {
         }
 
+
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
+
 
             View rootView = inflater.inflate(R.layout.fragment_main_dummy, container, false);
            final View htmlView =inflater.inflate(R.layout.home_wvtc,container,false);
@@ -288,27 +306,36 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
             {
 
                 wc.getSettings().setJavaScriptEnabled(true);
-                wc.loadUrl("http://www.wvtc.net/android/webcam.html");
-                wc.setWebViewClient(new WebViewClient(){
-                    public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                if(hasWIFIConnection(getActivity().getApplication())){
+                    wc.loadUrl("http://www.wvtc.net/android/webcam.html?conn=wifi");
+                }
+                else{
+                    //wc.loadUrl("http://www.wvtc.net/android/webcam.html");
+                }
+                    wc.setWebViewClient(new WebViewClient(){
+                        public boolean shouldOverrideUrlLoading(WebView view, String url) {
 
                             return false;
 
-                    }
-                });
-                wc.setWebChromeClient(new WebChromeClient(){
-                    ProgressBar bar = (ProgressBar) htmlView.findViewById(R.id.progressBar);
-                    @Override
-                    public void onProgressChanged(WebView view, int newProgress) {
-                        if (newProgress == 100) {
-
-                            bar.setVisibility(View.GONE);
                         }
-                    }
+                    });
 
-                });
+                    wc.setWebChromeClient(new WebChromeClient(){
+                        ProgressBar bar = (ProgressBar) htmlView.findViewById(R.id.progressBar);
+                        @Override
+                        public void onProgressChanged(WebView view, int newProgress) {
+                            if (newProgress == 100) {
+
+                                bar.setVisibility(View.GONE);
+                            }
+                        }
+
+                    });
+
+
 
                 return htmlView;
+
             }
             else {
                 return rootView;
